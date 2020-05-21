@@ -99,6 +99,9 @@ endif (CHECK_ENABLE_GCOV AND NOT ${CMAKE_C_COMPILER_ID} MATCHES "GNU")
 option(ENABLE_MEMORY_LEAKING_TESTS
   "Enable certain memory leaking tests only if valgrind is not used in testing" ON)
 
+option(DISABLE_SUBUNIT
+  "Disable subunit even it can be found (autodetect if this is off)" OFF)
+
 ###############################################################################
 # Check system and architecture
 if(WIN32)
@@ -369,14 +372,14 @@ if (HAVE_LIBRT)
 endif (HAVE_LIBRT)
 
 check_library_exists(subunit subunit_test_start "" HAVE_SUBUNIT)
-if (HAVE_SUBUNIT)
+if (HAVE_SUBUNIT AND NOT DISABLE_SUBUNIT)
   set(SUBUNIT "subunit")
   set(ENABLE_SUBUNIT 1)
   add_definitions(-DENABLE_SUBUNIT=1)
-else(HAVE_SUBUNIT)
+else(HAVE_SUBUNIT AND NOT DISABLE_SUBUNIT)
   set(ENABLE_SUBUNIT 0)
   add_definitions(-DENABLE_SUBUNIT=0)
-endif (HAVE_SUBUNIT)
+endif (HAVE_SUBUNIT AND NOT DISABLE_SUBUNIT)
 
 ###############################################################################
 # Generate "config.h" from "cmake/config.h.in"
